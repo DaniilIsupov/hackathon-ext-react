@@ -1,5 +1,6 @@
 body {
-    margin: 25px;
+    margin: 25px auto;
+    padding: 0 25px;
 }
 
 div.polaroid {
@@ -7,6 +8,9 @@ div.polaroid {
     background-color: white;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.2);
     margin-bottom: 25px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 
 div.polaroid:hover {
@@ -22,4 +26,10 @@ img {
     width: 250px;
 }
 
-.title {}
+.title {
+    font-weight: bold;
+    font-size: 16px;
+}
+.cinema-tables {
+    margin-bottom: 20px;
+}

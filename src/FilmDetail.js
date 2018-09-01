@@ -17,10 +17,10 @@ class FilmDetail extends Component {
                 {
                     this.state.detail.cinema.map(item => {
                         return (
-                            <div>
+                            <div className="cinema-tables">
                                 <table>
                                     <tr>
-                                        <td colSpan={2}>{item.name}</td>
+                                        <td className="title" colSpan={2}>{item.name}</td>
                                     </tr>
                                     {item.time.map((val, index) => {
                                         return (
