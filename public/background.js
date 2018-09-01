@@ -1,9 +1,14 @@
 let films = [];
 
 //example of using a message handler from the content scripts
-chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
+chrome.extension.onMessage.addListener(async (request, sender, sendResponse) => {
     switch (request.msg) {
         case 'films':
+            sendResponse({ films });
+            break;
+        case 'updateFilms':
+            await init();
+            console.log('updateFilms', films);
             sendResponse({ films });
             break;
         default:
@@ -55,7 +60,6 @@ async function parseDetails(urls) {
                 return;
             }
             let title = $(response).find('.event-heading__title')[0].textContent.trim();
-            // title = title ? title.textContent.trim() : '';
             let image = $(response).find('.event-gallery__image')[0].style.backgroundImage.split('"')[1];;
             let cinema = []; // массив кинотеатров
             let scheduleTable = $(response).find('.schedule-cinema-item');
