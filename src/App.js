@@ -12,7 +12,7 @@ class App extends Component {
   }
   componentWillMount() {
     window.chrome.storage.sync.get('films', async (result) => {
-      this.setState({ films: result.films.films });
+      this.setState({ films: result.films.hasOwnPropery('films') ? result.films.films : [] });
     });
   }
   render() {
