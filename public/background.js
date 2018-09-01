@@ -1,9 +1,10 @@
+let films = [];
 
 //example of using a message handler from the content scripts
 chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
     switch (request.msg) {
         case 'films':
-            sendResponse();
+            sendResponse({ films });
             break;
         default:
             break;
@@ -12,22 +13,18 @@ chrome.extension.onMessage.addListener((request, sender, sendResponse) => {
 
 jQuery.ajaxSetup({ async: false });
 
-chrome.storage.sync.get('films', async (result) => {
-    // информация считается устаревшей если ей более чем 24 часа
-    if (!result.films || (result.films && new Date().getTime() > result.films.date + 1000 * 60 * 60 * 24)) {
-        console.log('Start parsing...');
-        let films = await parseFilms();
-        films = await parseDetails(films);
-        console.log('films', films);
-        if (films.length) {
-            chrome.storage.sync.set({ 'films': { films: films, date: new Date().getTime() } }, () => {
-                console.log('write to storage');
-            });
-        }
+async function init() {
+    console.log('Start parsing...');
+    films = await parseFilms();
+    if (!films.length) {
+        console.log('captcha DETECTED');
+        redirectCaptcha();
     } else {
-        console.log('result from storage', result.films);
+        films = await parseDetails(films);
     }
-});
+    console.log('End parsing...');
+}
+init();
 
 /**
  * Получаем массив объектов.
@@ -48,11 +45,18 @@ async function parseFilms() {
  * @param {array} urls - массив ссылок на фильмы
  */
 async function parseDetails(urls) {
+    let captcha = false;
     let films = []; // массив фильмов
     await urls.forEach(async (el, index) => {
         await $.get(`${el.url}`, (response) => {
+            if (response.indexOf('href="//yandex.ru/support/captcha/"') > -1) {
+                console.log('captcha DETECTED');
+                captcha = true;
+                return;
+            }
             let title = $(response).find('.event-heading__title')[0].textContent.trim();
-            let image = $(response).find('.event-gallery__image')[0].style.backgroundImage.split('"')[1];
+            // title = title ? title.textContent.trim() : '';
+            let image = $(response).find('.event-gallery__image')[0].style.backgroundImage.split('"')[1];;
             let cinema = []; // массив кинотеатров
             let scheduleTable = $(response).find('.schedule-cinema-item');
 
@@ -68,7 +72,11 @@ async function parseDetails(urls) {
                         // если фильм еще не начался, то можно узнать номер зала и цену
                         if (arraySchedule[k].localName.trim() == 'button') {
                             time.push($(arraySchedule[k]).find('span')[0].innerHTML.split('<')[0]);
-                            room.push($(arraySchedule[k]).find('div')[0].textContent.trim());
+                            try {
+                                room.push($(arraySchedule[k]).find('div')[0].textContent.trim());
+                            } catch (error) {
+                                room.push('Цена не определена');
+                            }
                         } else {
                             time.push(arraySchedule[k].textContent.trim());
                             room.push('Цена не определена');
@@ -80,7 +88,14 @@ async function parseDetails(urls) {
             films.push({ title, cinema, image });
         });
     });
+    if (captcha) {
+        redirectCaptcha();
+    }
     return films;
+}
+
+function redirectCaptcha() {
+    chrome.tabs.create({ url: `https://afisha.yandex.ru/kirov/cinema?source=calendar&preset=today` });
 }
 
 /**
