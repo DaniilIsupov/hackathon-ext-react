@@ -6,8 +6,26 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    let d = new Date().getDate();
+    let m = new Date();
+    let month = [
+      "Января",
+      "Февраля",
+      "Марта",
+      "Апреля",
+      "Мая",
+      "Июня",
+      "Июля",
+      "Августа",
+      "Сентября",
+      "Октября",
+      "Ноября",
+      "Декабря"
+    ];
+
     this.state = {
-      films: []
+      films: [],
+      time: (d + month[m.getMonth()]).toLocaleString()
     }
   }
 
@@ -28,6 +46,9 @@ class App extends Component {
     let showFilms = this.state.films.length > 0;
     return (
       <div className="App">
+        <p className="App-clock">
+          Расписание на {this.state.time}
+        </p>
         <button onClick={() => this.updateFilms()}>Обновить</button>
         {
           showFilms &&

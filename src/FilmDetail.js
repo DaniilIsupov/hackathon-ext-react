@@ -6,14 +6,15 @@ class FilmDetail extends Component {
         super(props);
 
         this.state = {
-            detail: this.props.detail
+            detail: this.props.detail,
+            showBack: !(this.props.hasOwnProperty('content') && this.props.content)
         }
     }
 
     render() {
         return (
             <div className="detailWrapper">
-                <a onClick={this.props.handleShowFilms}>Назад</a>
+                {this.state.showBack && <a onClick={this.props.handleShowFilms}>Назад</a>}
                 {
                     this.state.detail.cinema.map(item => {
                         return (
