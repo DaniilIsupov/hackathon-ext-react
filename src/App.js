@@ -25,18 +25,22 @@ class App extends Component {
   }
 
   render() {
+    let showFilms = this.state.films.length > 0;
     return (
       <div className="App">
         <button onClick={() => this.updateFilms()}>Обновить</button>
         {
-          this.state.films.length ?
-            <Films
-              films={this.state.films}
-            />
-            :
-            <p>Идет поиск...</p>
+          showFilms &&
+          <Films
+            films={this.state.films}
+            updateFilms={() => this.updateFilms()}
+          />
         }
-      </div>
+        {!showFilms &&
+          <div>
+            <p>Идет поиск...</p>
+          </div>}
+      </div >
     );
   }
 }
