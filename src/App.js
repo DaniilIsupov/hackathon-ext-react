@@ -31,6 +31,7 @@ class App extends Component {
 
   componentWillMount() {
     window.chrome.extension.sendMessage({ msg: 'films' }, (response) => {
+      console.log(response);
       this.setState({ films: response.films ? response.films : [] });
     });
   }

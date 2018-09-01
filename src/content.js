@@ -77,6 +77,7 @@ class ContentReact extends React.Component {
                 >
                     <div>
                         <span className="closeModalFilm" onClick={this.closeModal}>&times;</span>
+                        <p>Этот фильм вы можете посмотреть в одном из следующих кинотеатрах.</p>
                         <FilmDetail
                             detail={this.state.detail}
                             content={true}

@@ -63,6 +63,7 @@ async function parseDetails(urls) {
             let image = $(response).find('.event-gallery__image')[0].style.backgroundImage.split('"')[1];;
             let cinema = []; // массив кинотеатров
             let scheduleTable = $(response).find('.schedule-cinema-item');
+            let rating = $(response).find('.arrow_theme_rating').text();
 
             for (let i = 0; i < scheduleTable.length; i++) {
                 let name = $(scheduleTable[i]).find('.place__title')[0].textContent.trim();
@@ -89,7 +90,7 @@ async function parseDetails(urls) {
                 }
                 cinema.push({ name, time, room });
             }
-            films.push({ title, cinema, image });
+            films.push({ title, cinema, image, rating });
         });
     });
     if (captcha) {

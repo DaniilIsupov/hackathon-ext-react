@@ -14,20 +14,21 @@ class FilmDetail extends Component {
     render() {
         return (
             <div className="detailWrapper">
-                {this.state.showBack && <a onClick={this.props.handleShowFilms}>Назад</a>}
+                {this.state.showBack && <a className="backButtonFilm" onClick={this.props.handleShowFilms}>Назад</a>}
+                <p>Рейтинг фильма: {this.state.detail.rating}</p>
                 {
                     this.state.detail.cinema.map(item => {
                         return (
                             <div className="cinema-tables">
-                                <table>
-                                    <tr>
-                                        <td className="title" colSpan={2}>{item.name}</td>
+                                <table className="customTableFilm">
+                                    <tr className="customTRFilm">
+                                        <td className="customTDFilm title" colSpan={2}>{item.name}</td>
                                     </tr>
                                     {item.time.map((val, index) => {
                                         return (
-                                            <tr>
-                                                <td>{val}</td>
-                                                <td>{item.room[index]}</td>
+                                            <tr className="customTRFilm">
+                                                <td className="customTDFilm">{val}</td>
+                                                <td className="customTDFilm">{item.room[index]}</td>
                                             </tr>
                                         )
                                     })}
